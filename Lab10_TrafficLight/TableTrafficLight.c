@@ -32,7 +32,57 @@
 #define BIT7	0x80
 
 #define CRYSTAL 0x15
+
+// ***** Traffic Signal Outputs
+#define WESTGRN_SOUTHRED 	0x33
+#define WESTYL_SOUTHRED		0x2B
+#define WESTRED_SOUTHGRN 	0x1E
+#define WESTRED_SOUTHYL		0x1D
+#define WESTRED_SOUTHRED	0x1B
+
+// ***** Walk Signal Outputs
+#define WALK 							0x08
+#define DONT_WALK 				0x02
+#define BLINK							0x00
 // ***** 2. Global Declarations Section *****
+// States
+typedef enum {
+	goWest,
+	waitWest,
+	goSouth,
+	waitSouth,
+	walk,
+	blinkWalkOn1,
+	blinkWalkOff1,
+	blinkWalkOn2,
+	blinkWalkOff2,
+	blinkWalkOn3,
+	blinkWalkOff3,
+	dontWalk
+}stateEnum;
+
+
+typedef struct state{
+	uint8_t output[2];			// Needs two bytes, one for port B and one for F
+	uint16_t delay;					
+	stateEnum nextState[8];
+} state;
+
+state FSM[12]={
+	[goWest] 				= {{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
+	[waitWest]			=	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
+	[goSouth]				=	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
+	[waitSouth]			=	{{WESTRED_SOUTHYL, DONT_WALK}, 		1000, {0,0,2,0,4,0,4,0}},
+	[walk]					=	{{WESTRED_SOUTHRED, WALK}, 				3000, {4,5,5,5,4,5,5,5}},
+	[blinkWalkOn1]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{6,6,6,6,6,6,6,6}},
+	[blinkWalkOff1]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{7,7,7,7,7,7,7,7}},
+	[blinkWalkOn2]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{8,8,8,8,8,8,8,8}},
+	[blinkWalkOff2]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{9,9,9,9,9,9,9,9}},
+	[blinkWalkOn3]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{10,10,10,10,10,10,10,10}},
+	[blinkWalkOff3]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
+	[dontWalk]			=	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
+};
+
 
 // FUNCTION PROTOTYPES: Each subroutine defined
 void DisableInterrupts(void); 			// Disable interrupts
@@ -40,6 +90,7 @@ void EnableInterrupts(void);  			// Enable interrupts
 void initHardware(void);						// Sets up the ports to interact with the hardware
 void initSysTick(void);							// Set up the systick timer
 void delayMilliSec(uint16_t delay);	// Delay set number of milliseconds
+void hardwareCheck();								// Light up all the LEDs for verification
 
 // ***** 3. Subroutines Section *****
 
@@ -115,8 +166,15 @@ void initSysTick(void){
 //	counts that number of cycles the number of times specified by the input var "delay"
 */
 void delayMilliSec(uint16_t delay){
-	uint32_t timeConst = 80000;			// Number of ticks of 80 MHz clock to equal 1ms
-	NVIC_ST_RELOAD_R = timeConst;		// Set value to count down from
-	NVIC_ST_CURRENT_R = 0;          // any write to current clears it             
-	while(!(NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT)){};	// Wait for count flag to be cleared
+	while(delay){
+		uint32_t timeConst = 80000;			// Number of ticks of 80 MHz clock to equal 1ms
+		NVIC_ST_RELOAD_R = timeConst;		// Set value to count down from
+		NVIC_ST_CURRENT_R = 0;          // any write to current clears it             
+		while(!(NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT)){};	// Wait for count flag to be cleared
+		delay--;
+		}
 }	
+
+void hardwareCheck(){
+	
+}
