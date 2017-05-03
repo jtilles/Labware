@@ -32,6 +32,7 @@
 #define BIT7	0x80
 
 #define CRYSTAL 0x15
+#define NUM_STATES 12
 
 // ***** Traffic Signal Outputs
 #define WESTGRN_SOUTHRED 	0x33
@@ -65,10 +66,11 @@ typedef enum {
 typedef struct state{
 	uint8_t output[2];			// Needs two bytes, one for port B and one for F
 	uint16_t delay;					
-	stateEnum nextState[8];
+	uint8_t nextState[8];
+	//stateEnum nextState[8];
 } state;
-
-state FSM[12]={
+/*
+state FSM[NUM_STATES]={
 	[goWest] 				= {{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
 	[waitWest]			=	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
 	[goSouth]				=	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
@@ -82,7 +84,22 @@ state FSM[12]={
 	[blinkWalkOff3]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
 	[dontWalk]			=	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
 };
+*/
 
+state FSM[NUM_STATES]={
+	{{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
+	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
+	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
+	{{WESTRED_SOUTHYL, DONT_WALK}, 		1000, {0,0,2,0,4,0,4,0}},
+	{{WESTRED_SOUTHRED, WALK}, 				3000, {4,5,5,5,4,5,5,5}},
+	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{6,6,6,6,6,6,6,6}},
+	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{7,7,7,7,7,7,7,7}},
+	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{8,8,8,8,8,8,8,8}},
+	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{9,9,9,9,9,9,9,9}},
+	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{10,10,10,10,10,10,10,10}},
+	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
+	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
+};
 
 // FUNCTION PROTOTYPES: Each subroutine defined
 void DisableInterrupts(void); 			// Disable interrupts
@@ -90,7 +107,7 @@ void EnableInterrupts(void);  			// Enable interrupts
 void initHardware(void);						// Sets up the ports to interact with the hardware
 void initSysTick(void);							// Set up the systick timer
 void delayMilliSec(uint16_t delay);	// Delay set number of milliseconds
-void hardwareCheck();								// Light up all the LEDs for verification
+void hardwareCheck(void);								// Light up all the LEDs for verification
 
 // ***** 3. Subroutines Section *****
 
@@ -99,15 +116,18 @@ int main(void){
  
   
   EnableInterrupts();
+	initHardware();
+	hardwareCheck();
   while(1){
-     
+    GPIO_PORTF_DATA_R ^= 0x02; 
+		delayMilliSec(1000);
   }
 }
 
 void initHardware(void){
 	volatile unsigned long delay;
-	SYSCTL_RCGC2_R |= BIT1 | BIT4 | BIT5;     // 1) activate clock for Ports B,E, and F
-  delay = SYSCTL_RCGC2_R;           				// allow time for clock to start
+	SYSCTL_RCGC2_R |= (BIT1 | BIT4 | BIT5);     // 1) activate clock for Ports B,E, and F
+  delay = SYSCTL_RCGC2_R;           					// allow time for clock to start
   
 	GPIO_PORTB_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port B
 	GPIO_PORTE_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port E
@@ -137,7 +157,9 @@ void initHardware(void){
 	
 	GPIO_PORTB_DEN_R = 0x3F;          // 7) enable digital I/O on PB5-0
 	GPIO_PORTE_DEN_R = 0x07;          // 7) enable digital I/O on PE2-0
-  GPIO_PORTF_DEN_R = 0x0A;          // 7) enable digital I/O on PF3,1
+  GPIO_PORTF_DEN_R = 0x0F;          // 7) enable digital I/O on PF3,1
+	
+	initSysTick();
 }
 
 // Initialize the systick timer for precise timing applications
@@ -145,8 +167,8 @@ void initSysTick(void){
 	
 	SYSCTL_RCC2_R |= 	SYSCTL_RCC2_USERCC2 + 			// Use RCC2
 										SYSCTL_RCC2_BYPASS2; 				// Bypass PLL
-	SYSCTL_RCC_R 	= 	SYSCTL_RCC_R & ~(0x1F<<6)		// Clear XTAL
-										+	(CRYSTAL << 6);						// Set Crystal Freq in XTAL
+	SYSCTL_RCC_R 	= 	(SYSCTL_RCC_R & ~(0x1F<<6))	// Clear XTAL
+										|	(CRYSTAL << 6);						// Set Crystal Freq in XTAL
 	SYSCTL_RCC2_R &=	~(0x07<<4 | 0x01<<13);			// Sets oscillator source to Main Oscillator
 	SYSCTL_RCC2_R |=	0x40000000;									// Divide PLL from 400MHz
 	SYSCTL_RCC2_R = (SYSCTL_RCC2_R&~ 0x1FC00000)  // clear system clock divider
@@ -159,6 +181,7 @@ void initSysTick(void){
   NVIC_ST_CURRENT_R = 0;                				// any write to current clears it             
   NVIC_ST_CTRL_R = 	NVIC_ST_CTRL_ENABLE |				// enable SysTick with system clock (80 MHz)
 										NVIC_ST_CTRL_CLK_SRC; 
+	//uint32_t ctrlReg = NVIC_ST_CTRL_R;
 }
 
 /* Precise delays using systick timer
@@ -166,15 +189,21 @@ void initSysTick(void){
 //	counts that number of cycles the number of times specified by the input var "delay"
 */
 void delayMilliSec(uint16_t delay){
+	uint32_t timeConst = 80000;			// Number of ticks of 80 MHz clock to equal 1ms
 	while(delay){
-		uint32_t timeConst = 80000;			// Number of ticks of 80 MHz clock to equal 1ms
-		NVIC_ST_RELOAD_R = timeConst;		// Set value to count down from
+		NVIC_ST_RELOAD_R = timeConst-1;		// Set value to count down from
 		NVIC_ST_CURRENT_R = 0;          // any write to current clears it             
-		while(!(NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT)){};	// Wait for count flag to be cleared
+		while((NVIC_ST_CTRL_R & 0x00010000)==0){}	// Wait for count flag to be cleared
 		delay--;
 		}
 }	
 
-void hardwareCheck(){
-	
+void hardwareCheck(void){
+	uint8_t i;
+	for (i=0; i<NUM_STATES; i++){
+		GPIO_PORTF_DATA_R = FSM[i].output[1];		// Output the walk signal
+		GPIO_PORTB_DATA_R = FSM[i].output[0];		// Output the traffic signals
+		delayMilliSec(500);
+	}
 }
+
