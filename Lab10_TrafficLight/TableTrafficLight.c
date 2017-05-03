@@ -31,6 +31,7 @@
 #define BIT6	0x40
 #define BIT7	0x80
 
+#define CRYSTAL 0x15
 // ***** 2. Global Declarations Section *****
 
 // FUNCTION PROTOTYPES: Each subroutine defined
@@ -82,15 +83,31 @@ void initHardware(void){
 	GPIO_PORTF_AFSEL_R = 0x00;        // 6) disable alt funct on PF7-0
 	
   GPIO_PORTE_PDR_R = 0x07;          // enable pull-downs on PE0-2
-  GPIO_PORTF_DEN_R = 0x1F;          // 7) enable digital I/O on PF4-0
+	
+	GPIO_PORTB_DEN_R = 0x3F;          // 7) enable digital I/O on PB5-0
+	GPIO_PORTE_DEN_R = 0x07;          // 7) enable digital I/O on PE2-0
+  GPIO_PORTF_DEN_R = 0x0A;          // 7) enable digital I/O on PF3,1
 }
 
 // Initialize the systick timer for precise timing applications
 void initSysTick(void){
-	NVIC_ST_CTRL_R = 0;                   // disable SysTick during setup
-  NVIC_ST_RELOAD_R = 0x00FFFFFF;        // maximum reload value
-  NVIC_ST_CURRENT_R = 0;                // any write to current clears it             
-  NVIC_ST_CTRL_R = BIT2 | BIT0;          // enable SysTick with system clock (80 MHz)
+	
+	SYSCTL_RCC2_R |= 	SYSCTL_RCC2_USERCC2 + 			// Use RCC2
+										SYSCTL_RCC2_BYPASS2; 				// Bypass PLL
+	SYSCTL_RCC_R 	= 	SYSCTL_RCC_R & ~(0x1F<<6)		// Clear XTAL
+										+	(CRYSTAL << 6);						// Set Crystal Freq in XTAL
+	SYSCTL_RCC2_R &=	~(0x07<<4 | 0x01<<13);			// Sets oscillator source to Main Oscillator
+	SYSCTL_RCC2_R |=	0x40000000;									// Divide PLL from 400MHz
+	SYSCTL_RCC2_R = (SYSCTL_RCC2_R&~ 0x1FC00000)  // clear system clock divider
+                  + (4<<22);      							// configure for 80 MHz clock
+	while((SYSCTL_RIS_R&0x00000040)==0){};  			// wait for PLLRIS bit, indicating PLL is locked
+	SYSCTL_RCC2_R &= ~0x00000800;									// Enable PLL by clearing BYPASS
+	
+	NVIC_ST_CTRL_R = 0;		                   			// disable SysTick during setup
+  NVIC_ST_RELOAD_R = 0x00FFFFFF;        				// maximum reload value
+  NVIC_ST_CURRENT_R = 0;                				// any write to current clears it             
+  NVIC_ST_CTRL_R = 	NVIC_ST_CTRL_ENABLE |				// enable SysTick with system clock (80 MHz)
+										NVIC_ST_CTRL_CLK_SRC; 
 }
 
 /* Precise delays using systick timer
@@ -98,10 +115,8 @@ void initSysTick(void){
 //	counts that number of cycles the number of times specified by the input var "delay"
 */
 void delayMilliSec(uint16_t delay){
-	uint16_t timeConst = 800;		// Number of ticks of 80 MHz clock to equal 1ms
-	while (delay){
-		while(timeConst)
-			timeConst--;
-		delay--;
-	}
+	uint32_t timeConst = 80000;			// Number of ticks of 80 MHz clock to equal 1ms
+	NVIC_ST_RELOAD_R = timeConst;		// Set value to count down from
+	NVIC_ST_CURRENT_R = 0;          // any write to current clears it             
+	while(!(NVIC_ST_CTRL_R & NVIC_ST_CTRL_COUNT)){};	// Wait for count flag to be cleared
 }	
