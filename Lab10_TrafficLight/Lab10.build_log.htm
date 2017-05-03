@@ -4,6 +4,37 @@
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
 C:\Keil\Labware\Lab10_TrafficLight\Lab10.uvproj
-Project File Date:  05/02/2017
+Project File Date:  05/03/2017
 
 <h2>Output:</h2>
+Build target 'Lab10'
+compiling TableTrafficLight.c...
+linking...
+Program Size: Code=4432 RO-data=14296 RW-data=212 ZI-data=1764  
+".\Lab10.axf" - 0 Error(s), 0 Warning(s).
+_SOUTHRED, DONT_WALK},       3000, {0,0,1,1,1,1,1,1}},
+TableTrafficLight.c(79): error:  #29: expected an expression
+        [waitWest]                      =       {{WESTYL_SOUTHRED, DONT_WALK},          1000, {2,0,2,2,4,4,4,4}},
+TableTrafficLight.c(80): error:  #29: expected an expression
+        [goSouth]                               =       {{WESTRED_SOUTHGRN, DONT_WALK},         3000, {2,3,2,3,3,3,3,3}},
+TableTrafficLight.c(81): error:  #29: expected an expression
+        [waitSouth]                     =       {{WESTRED_SOUTHYL, DONT_WALK},          1000, {0,0,2,0,4,0,4,0}},
+TableTrafficLight.c(82): error:  #29: expected an expression
+        [walk]                                  =       {{WESTRED_SOUTHRED, WALK},                              3000, {4,5,5,5,4,5,5,5}},
+TableTrafficLight.c(83): error:  #29: expected an expression
+        [blinkWalkOn1]  =       {{WESTRED_SOUTHRED, DONT_WALK},         250,    {6,6,6,6,6,6,6,6}},
+TableTrafficLight.c(84): error:  #29: expected an expression
+        [blinkWalkOff1] =       {{WESTRED_SOUTHRED, BLINK},                     250,    {7,7,7,7,7,7,7,7}},
+TableTrafficLight.c(85): error:  #29: expected an expression
+        [blinkWalkOn2]  =       {{WESTRED_SOUTHRED, DONT_WALK},         250,    {8,8,8,8,8,8,8,8}},
+TableTrafficLight.c(86): error:  #29: expected an expression
+        [blinkWalkOff2] =       {{WESTRED_SOUTHRED, BLINK},                     250,    {9,9,9,9,9,9,9,9}},
+TableTrafficLight.c(87): error:  #29: expected an expression
+        [blinkWalkOn3]  =       {{WESTRED_SOUTHRED, DONT_WALK},         250,    {10,10,10,10,10,10,10,10}},
+TableTrafficLight.c(88): error:  #29: expected an expression
+        [blinkWalkOff3] =       {{WESTRED_SOUTHRED, BLINK},                     250,    {11,11,11,11,11,11,11,11}},
+TableTrafficLight.c(89): error:  #29: expected an expression
+        [dontWalk]                      =       {{WESTRED_SOUTHRED, DONT_WALK},         2000,   {2,0,2,0,4,0,2,2}}
+TableTrafficLight.c: 0 warnings, 12 errors
+".\Lab10.axf" - 12 Error(s), 0 Warning(s).
+Target not created
