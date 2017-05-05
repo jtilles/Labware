@@ -53,9 +53,9 @@
 #define DONT_WALK 				0x02
 #define BLINK							0x00
 
-#define SHORT_WAIT				25
-#define MEDIUM_WAIT				100
-#define LONG_WAIT					300
+#define SHORT_WAIT				250
+#define MEDIUM_WAIT				1000
+#define LONG_WAIT					3000
 //#define DONT_WALK_WAIT		2000
 // ***** 2. Global Declarations Section *****
 // States
@@ -119,7 +119,7 @@ int main(void){
   
   EnableInterrupts();
 	initHardware();
-	//hardwareCheck();
+	hardwareCheck();
 	
 	
   while(1){
@@ -163,7 +163,7 @@ void initHardware(void){
 	GPIO_PORTE_AFSEL_R = 0x00;        // 6) disable alt funct on PE7-0
 	GPIO_PORTF_AFSEL_R = 0x00;        // 6) disable alt funct on PF7-0
 	
-  GPIO_PORTE_PDR_R = 0x07;          // enable pull-downs on PE0-2
+  //GPIO_PORTE_PDR_R = 0x07;          // enable pull-downs on PE0-2
 	
 	GPIO_PORTB_DEN_R = 0xFF;          // 7) enable digital I/O on PB5-0
 	GPIO_PORTE_DEN_R = 0x07;          // 7) enable digital I/O on PE2-0
@@ -209,6 +209,8 @@ void delayMilliSec(uint16_t delay){
 
 void hardwareCheck(void){
 	uint8_t i;
+	GPIO_PORTB_DATA_R = 0x3F;
+	delayMilliSec(250);
 	for (i=0; i<NUM_STATES; i++){
 		GPIO_PORTF_DATA_R = FSM[i].output[1];		// Output the walk signal
 		GPIO_PORTB_DATA_R = FSM[i].output[0];		// Output the traffic signals
