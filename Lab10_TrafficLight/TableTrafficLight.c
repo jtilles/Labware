@@ -33,13 +33,18 @@
 
 #define CRYSTAL 0x15
 #define NUM_STATES 12
+<<<<<<< HEAD
 /*
+=======
+
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 // ***** Traffic Signal Outputs
 #define WESTGRN_SOUTHRED 	0x33
 #define WESTYL_SOUTHRED		0x2B
 #define WESTRED_SOUTHGRN 	0x1E
 #define WESTRED_SOUTHYL		0x1D
 #define WESTRED_SOUTHRED	0x1B
+<<<<<<< HEAD
 */
 // ***** Traffic Signal Outputs
 #define WESTGRN_SOUTHRED 	0x0C
@@ -47,11 +52,14 @@
 #define WESTRED_SOUTHGRN 	0x21
 #define WESTRED_SOUTHYL		0x22
 #define WESTRED_SOUTHRED	0x24
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 
 // ***** Walk Signal Outputs
 #define WALK 							0x08
 #define DONT_WALK 				0x02
 #define BLINK							0x00
+<<<<<<< HEAD
 
 #define SHORT_WAIT				250
 #define MEDIUM_WAIT				1000
@@ -60,6 +68,11 @@
 // ***** 2. Global Declarations Section *****
 // States
 enum stateEnum{
+=======
+// ***** 2. Global Declarations Section *****
+// States
+typedef enum {
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 	goWest,
 	waitWest,
 	goSouth,
@@ -72,13 +85,18 @@ enum stateEnum{
 	blinkWalkOn3,
 	blinkWalkOff3,
 	dontWalk
+<<<<<<< HEAD
 };
+=======
+}stateEnum;
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 
 
 typedef struct state{
 	uint8_t output[2];			// Needs two bytes, one for port B and one for F
 	uint16_t delay;					
 	uint8_t nextState[8];
+<<<<<<< HEAD
 } state;
 
 
@@ -100,6 +118,41 @@ state FSM[NUM_STATES]={
 
 state FLAG;
 
+=======
+	//stateEnum nextState[8];
+} state;
+/*
+state FSM[NUM_STATES]={
+	[goWest] 				= {{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
+	[waitWest]			=	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
+	[goSouth]				=	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
+	[waitSouth]			=	{{WESTRED_SOUTHYL, DONT_WALK}, 		1000, {0,0,2,0,4,0,4,0}},
+	[walk]					=	{{WESTRED_SOUTHRED, WALK}, 				3000, {4,5,5,5,4,5,5,5}},
+	[blinkWalkOn1]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{6,6,6,6,6,6,6,6}},
+	[blinkWalkOff1]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{7,7,7,7,7,7,7,7}},
+	[blinkWalkOn2]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{8,8,8,8,8,8,8,8}},
+	[blinkWalkOff2]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{9,9,9,9,9,9,9,9}},
+	[blinkWalkOn3]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{10,10,10,10,10,10,10,10}},
+	[blinkWalkOff3]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
+	[dontWalk]			=	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
+};
+*/
+
+state FSM[NUM_STATES]={
+	{{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
+	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
+	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
+	{{WESTRED_SOUTHYL, DONT_WALK}, 		1000, {0,0,2,0,4,0,4,0}},
+	{{WESTRED_SOUTHRED, WALK}, 				3000, {4,5,5,5,4,5,5,5}},
+	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{6,6,6,6,6,6,6,6}},
+	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{7,7,7,7,7,7,7,7}},
+	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{8,8,8,8,8,8,8,8}},
+	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{9,9,9,9,9,9,9,9}},
+	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{10,10,10,10,10,10,10,10}},
+	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
+	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
+};
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 
 // FUNCTION PROTOTYPES: Each subroutine defined
 void DisableInterrupts(void); 			// Disable interrupts
@@ -120,6 +173,7 @@ int main(void){
   EnableInterrupts();
 	initHardware();
 	hardwareCheck();
+<<<<<<< HEAD
 	
 	
   while(1){
@@ -131,6 +185,11 @@ int main(void){
 						& (BIT0 | BIT1 | BIT2); 
 		currentState = FSM[currentState].nextState[next];		// get the next state
 		
+=======
+  while(1){
+    GPIO_PORTF_DATA_R ^= 0x02; 
+		delayMilliSec(1000);
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
   }
 }
 
@@ -191,6 +250,7 @@ void initSysTick(void){
   NVIC_ST_CURRENT_R = 0;                				// any write to current clears it             
   NVIC_ST_CTRL_R = 	NVIC_ST_CTRL_ENABLE |				// enable SysTick with system clock (80 MHz)
 										NVIC_ST_CTRL_CLK_SRC; 
+	//uint32_t ctrlReg = NVIC_ST_CTRL_R;
 }
 
 /* Precise delays using systick timer
@@ -209,8 +269,11 @@ void delayMilliSec(uint16_t delay){
 
 void hardwareCheck(void){
 	uint8_t i;
+<<<<<<< HEAD
 	GPIO_PORTB_DATA_R = 0x3F;
 	delayMilliSec(250);
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 	for (i=0; i<NUM_STATES; i++){
 		GPIO_PORTF_DATA_R = FSM[i].output[1];		// Output the walk signal
 		GPIO_PORTB_DATA_R = FSM[i].output[0];		// Output the traffic signals
