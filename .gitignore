@@ -1,0 +1,12 @@
+# Kiel Garbage
+*.scvd
+*.axf
+*.htm
+*.lnp
+*.map
+*.jilles
+*.dep
+*.lst
+*.d
+*.o
+*~$*

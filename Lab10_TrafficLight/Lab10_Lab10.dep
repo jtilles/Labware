@@ -1,22 +1,0 @@
-Dependencies for Project 'Lab10', Target 'Lab10': (DO NOT MODIFY !)
-<<<<<<< HEAD
-<<<<<<< HEAD
-F (.\startup.s)(0x59091913)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
-F (.\TableTrafficLight.c)(0x590A7809)(-c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\..-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\tabletrafficlight.o --omf_browse .\tabletrafficlight.crf --depend .\tabletrafficlight.d)
-I (TExaS.h)(0x59091913)
-I (..\tm4c123gh6pm.h)(0x59091916)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C86E14)
-F (.\texas.o)(0x59091913)()
-=======
-=======
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
-F (.\startup.s)(0x5701D3C8)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Luminary--pd "__UVISION_VERSION SETA 523"--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
-F (.\TableTrafficLight.c)(0x590A1278)(--c99 -c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I .. -I ..\..\..-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Luminary-D__UVISION_VERSION="523" -Drvmdk -DPART_LM4F120H5QR-o .\tabletrafficlight.o --omf_browse .\tabletrafficlight.crf --depend .\tabletrafficlight.d)
-I (TExaS.h)(0x56994DCA)
-I (..\tm4c123gh6pm.h)(0x51D49AE2)
-I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F6AF78)
-F (.\texas.o)(0x56994FBA)()
-<<<<<<< HEAD
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
-=======
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
