@@ -147,7 +147,10 @@
             <RestoreTracepoints>0</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <UsePdscDebugDescription>0</UsePdscDebugDescription>
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 =======
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
           </Target>
@@ -366,9 +369,12 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <uC99>0</uC99>
             <useXO>0</useXO>
 =======
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
             <uC99>1</uC99>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
@@ -378,6 +384,9 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
+<<<<<<< HEAD
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
+=======
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
             <VariousControls>
               <MiscControls></MiscControls>
@@ -397,6 +406,10 @@
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+            <uClangAs>0</uClangAs>
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 =======
             <uClangAs>0</uClangAs>
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac

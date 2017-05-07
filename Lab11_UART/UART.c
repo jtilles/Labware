@@ -28,6 +28,9 @@
 
 #include "tm4c123gh6pm.h"
 #include "UART.h"
+#define NULL 0x00
+
+void add2String(unsigned long n, uint8_t index);		// Helper function
 
 //------------UART_Init------------
 // Initialize the UART for 115200 baud rate (assuming 80 MHz UART clock),
@@ -123,7 +126,12 @@ char character;
 // Output: none
 void UART_OutString(unsigned char buffer[]){
 // as part of Lab 11 implement this function
-
+	uint8_t i=0;
+	while(buffer[i]!=NULL){
+		UART_OutChar(buffer[i]);
+		i++;
+	}
+	return;		
 }
 
 unsigned char String[10];
@@ -139,8 +147,31 @@ unsigned char String[10];
 // 2210 to "2210 "
 //10000 to "**** "  any value larger than 9999 converted to "**** "
 void UART_ConvertUDec(unsigned long n){
-// as part of Lab 11 implement this function
-  
+	char i;
+	//uint32_t temp;
+	if(n> 9999){						// Outside threshold
+		for(i=1; i<5; i++){
+			String[i]= '*';
+		}
+		return;
+	}
+	add2String(n, 0);
+}
+
+
+void add2String(unsigned long n, uint8_t index){
+	if (index == 5){				// Base condition
+		String[index] = NULL;
+		return;
+	}
+	add2String(n/10, index++);
+	// N = 0 means there's not a digit in this place, fill with a space
+	if (n==0){	
+		String[index]= SP;		
+		return;
+	}
+	String[index] = n%10 + 0x30;		// Number to ASCII number 
+	return;
 }
 
 //-----------------------UART_OutUDec-----------------------

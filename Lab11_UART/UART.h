@@ -34,6 +34,8 @@
 #define SP   0x20
 #define DEL  0x7F
 
+#include <stdint.h>
+
 //------------UART_Init------------
 // Initialize the UART for 115200 baud rate (assuming 80 MHz clock),
 // 8 bit word length, no parity bits, one stop bit, FIFOs enabled
@@ -89,6 +91,7 @@ void UART_OutString(unsigned char buffer[]);
 // 2210 to "2210 "
 //10000 to "**** "  any value larger than 9999 converted to "**** "
 void UART_ConvertUDec(unsigned long n);
+
 
 //-----------------------UART_OutUDec-----------------------
 // Output a 32-bit number in unsigned decimal format

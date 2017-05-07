@@ -99,7 +99,10 @@
         <sRSysVw>1</sRSysVw>
         <tRSysVw>1</tRSysVw>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <tPdscDbg>0</tPdscDbg>
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 =======
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
         <sRunDeb>0</sRunDeb>
@@ -232,6 +235,7 @@
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <SystemViewers>
         <Entry>
           <Name>OS Support\TExaS Grader v2.1</Name>
@@ -239,6 +243,8 @@
         </Entry>
       </SystemViewers>
 =======
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
       <bLintAuto>0</bLintAuto>
       <bAutoGenD>0</bAutoGenD>
       <LntExFlags>0</LntExFlags>
@@ -246,6 +252,9 @@
       <pszMrule></pszMrule>
       <pSingCmds></pSingCmds>
       <pMultCmds></pMultCmds>
+<<<<<<< HEAD
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
+=======
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
     </TargetOption>
   </Target>
@@ -263,8 +272,11 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <TopLine>270</TopLine>
       <CurrentLine>277</CurrentLine>
+=======
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 =======
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
       <bDave2>0</bDave2>
@@ -279,11 +291,15 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <Focus>0</Focus>
       <ColumnNumber>71</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>77</TopLine>
       <CurrentLine>87</CurrentLine>
+=======
+      <tvExpOptDlg>0</tvExpOptDlg>
+>>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 =======
       <tvExpOptDlg>0</tvExpOptDlg>
 >>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac

@@ -1,0 +1,11 @@
+Dependencies for Project 'Lab11', Target 'Lab11': (DO NOT MODIFY !)
+F (.\startup.s)(0x5701D3C8)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Luminary--pd "__UVISION_VERSION SETA 523"--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
+F (.\UART.c)(0x590CDD03)(--c99 -c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I .. -I ..\..\..-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Luminary-D__UVISION_VERSION="523" -Drvmdk -DPART_LM4F120H5QR-o .\uart.o --omf_browse .\uart.crf --depend .\uart.d)
+I (..\tm4c123gh6pm.h)(0x51D49AE2)
+I (UART.h)(0x590CDCF2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F6AF78)
+F (.\main.c)(0x590CCEA7)(--c99 -c --cpu Cortex-M4 -D__EVAL -g -O0 --apcs=interwork --split_sections --signed_chars -I .. -I ..\..\..-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\Inc\Luminary-D__UVISION_VERSION="523" -Drvmdk -DPART_LM4F120H5QR-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+I (UART.h)(0x590CDCF2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x57F6AF78)
+I (TExaS.h)(0x56999774)
+F (.\texas.o)(0x56999774)()
