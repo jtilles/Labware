@@ -35,87 +35,22 @@
 #define NUM_STATES 12
 
 // ***** Traffic Signal Outputs
-<<<<<<< HEAD
 #define WESTGRN_SOUTHRED 	0x0C
 #define WESTYL_SOUTHRED		0x14
 #define WESTRED_SOUTHGRN 	0x21
 #define WESTRED_SOUTHYL		0x22
 #define WESTRED_SOUTHRED	0x24
-=======
-#define WESTGRN_SOUTHRED 	0x33
-#define WESTYL_SOUTHRED		0x2B
-#define WESTRED_SOUTHGRN 	0x1E
-#define WESTRED_SOUTHYL		0x1D
-#define WESTRED_SOUTHRED	0x1B
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 
 // ***** Walk Signal Outputs
 #define WALK 							0x08
 #define DONT_WALK 				0x02
 #define BLINK							0x00
-<<<<<<< HEAD
 
 #define SHORT_WAIT				250
 #define MEDIUM_WAIT				1000
 #define LONG_WAIT					3000
 //#define DONT_WALK_WAIT		2000
-=======
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 // ***** 2. Global Declarations Section *****
-// States
-typedef enum {
-	goWest,
-	waitWest,
-	goSouth,
-	waitSouth,
-	walk,
-	blinkWalkOn1,
-	blinkWalkOff1,
-	blinkWalkOn2,
-	blinkWalkOff2,
-	blinkWalkOn3,
-	blinkWalkOff3,
-	dontWalk
-}stateEnum;
-
-
-typedef struct state{
-	uint8_t output[2];			// Needs two bytes, one for port B and one for F
-	uint16_t delay;					
-	uint8_t nextState[8];
-	//stateEnum nextState[8];
-} state;
-/*
-state FSM[NUM_STATES]={
-	[goWest] 				= {{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
-	[waitWest]			=	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
-	[goSouth]				=	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
-	[waitSouth]			=	{{WESTRED_SOUTHYL, DONT_WALK}, 		1000, {0,0,2,0,4,0,4,0}},
-	[walk]					=	{{WESTRED_SOUTHRED, WALK}, 				3000, {4,5,5,5,4,5,5,5}},
-	[blinkWalkOn1]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{6,6,6,6,6,6,6,6}},
-	[blinkWalkOff1]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{7,7,7,7,7,7,7,7}},
-	[blinkWalkOn2]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{8,8,8,8,8,8,8,8}},
-	[blinkWalkOff2]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{9,9,9,9,9,9,9,9}},
-	[blinkWalkOn3]	=	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{10,10,10,10,10,10,10,10}},
-	[blinkWalkOff3]	=	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
-	[dontWalk]			=	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
-};
-*/
-
-state FSM[NUM_STATES]={
-	{{WESTGRN_SOUTHRED, DONT_WALK}, 	3000, {0,0,1,1,1,1,1,1}},
-	{{WESTYL_SOUTHRED, DONT_WALK}, 		1000, {2,0,2,2,4,4,4,4}},
-	{{WESTRED_SOUTHGRN, DONT_WALK}, 	3000, {2,3,2,3,3,3,3,3}},
-	{{WESTRED_SOUTHYL, DONT_WALK}, 		1000, {0,0,2,0,4,0,4,0}},
-	{{WESTRED_SOUTHRED, WALK}, 				3000, {4,5,5,5,4,5,5,5}},
-	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{6,6,6,6,6,6,6,6}},
-	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{7,7,7,7,7,7,7,7}},
-	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{8,8,8,8,8,8,8,8}},
-	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{9,9,9,9,9,9,9,9}},
-	{{WESTRED_SOUTHRED, DONT_WALK}, 	250, 	{10,10,10,10,10,10,10,10}},
-	{{WESTRED_SOUTHRED, BLINK}, 			250, 	{11,11,11,11,11,11,11,11}},
-	{{WESTRED_SOUTHRED, DONT_WALK},		2000,	{2,0,2,0,4,0,2,2}}
-};
 
 
 typedef struct state{
@@ -162,7 +97,6 @@ int main(void){
   EnableInterrupts();
 	initHardware();
 	hardwareCheck();
-<<<<<<< HEAD
 
   while(1){
 		FLAG = FSM[currentState];
@@ -172,11 +106,6 @@ int main(void){
 		next = 	GPIO_PORTE_DATA_R 													// Read Inputs
 						& (BIT0 | BIT1 | BIT2);
 		currentState = FSM[currentState].nextState[next];		// get the next state
-=======
-  while(1){
-    GPIO_PORTF_DATA_R ^= 0x02; 
-		delayMilliSec(1000);
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
   }
 }
 
@@ -184,11 +113,7 @@ void initHardware(void){
 	volatile unsigned long delay;
 	SYSCTL_RCGC2_R |= (BIT1 | BIT4 | BIT5);     // 1) activate clock for Ports B,E, and F
   delay = SYSCTL_RCGC2_R;           					// allow time for clock to start
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 	GPIO_PORTB_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port B
 	GPIO_PORTE_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port E
 	GPIO_PORTF_LOCK_R = 0x4C4F434B;   // 2) unlock GPIO Port F
@@ -218,11 +143,7 @@ void initHardware(void){
 	GPIO_PORTB_DEN_R = 0xFF;          // 7) enable digital I/O on PB5-0
 	GPIO_PORTE_DEN_R = 0x07;          // 7) enable digital I/O on PE2-0
   GPIO_PORTF_DEN_R = 0x0F;          // 7) enable digital I/O on PF3,1
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 	initSysTick();
 }
 
@@ -244,11 +165,7 @@ void initSysTick(void){
   NVIC_ST_RELOAD_R = 0x00FFFFFF;        				// maximum reload value
   NVIC_ST_CURRENT_R = 0;                				// any write to current clears it
   NVIC_ST_CTRL_R = 	NVIC_ST_CTRL_ENABLE |				// enable SysTick with system clock (80 MHz)
-<<<<<<< HEAD
 										NVIC_ST_CTRL_CLK_SRC;
-=======
-										NVIC_ST_CTRL_CLK_SRC; 
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 	//uint32_t ctrlReg = NVIC_ST_CTRL_R;
 }
 
@@ -260,19 +177,11 @@ void delayMilliSec(uint16_t delay){
 	uint32_t timeConst = 80000;			// Number of ticks of 80 MHz clock to equal 1ms
 	while(delay){
 		NVIC_ST_RELOAD_R = timeConst-1;		// Set value to count down from
-<<<<<<< HEAD
 		NVIC_ST_CURRENT_R = 0;          // any write to current clears it
 		while((NVIC_ST_CTRL_R & 0x00010000)==0){}	// Wait for count flag to be cleared
 		delay--;
 		}
 }
-=======
-		NVIC_ST_CURRENT_R = 0;          // any write to current clears it             
-		while((NVIC_ST_CTRL_R & 0x00010000)==0){}	// Wait for count flag to be cleared
-		delay--;
-		}
-}	
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
 
 void hardwareCheck(void){
 	uint8_t i;
@@ -282,7 +191,3 @@ void hardwareCheck(void){
 		delayMilliSec(500);
 	}
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 35e6af085f5b23bb7a3b05a7bfd1f7338a2b27ac
