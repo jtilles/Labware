@@ -30,7 +30,7 @@
 #include "UART.h"
 #define NULL 0x00
 
-void add2String(unsigned long n, uint8_t index);		// Helper function
+void add2myString(unsigned long n, uint8_t index);		// Helper function
 
 //------------UART_Init------------
 // Initialize the UART for 115200 baud rate (assuming 80 MHz UART clock),
@@ -149,28 +149,49 @@ unsigned char String[10];
 void UART_ConvertUDec(unsigned long n){
 	char i;
 	//uint32_t temp;
+	for(i=0; i< 10; i++){
+		String[i] = NULL;
+	}
+	String[4] = SP;
+	String[5] = NULL;
+	
 	if(n> 9999){						// Outside threshold
-		for(i=1; i<5; i++){
+		for(i=0; i<4; i++){
 			String[i]= '*';
 		}
 		return;
 	}
-	add2String(n, 0);
+	add2myString(n, 3);
 }
 
 
-void add2String(unsigned long n, uint8_t index){
-	if (index == 5){				// Base condition
-		String[index] = NULL;
+void add2myString(unsigned long n, uint8_t index){
+	unsigned int temp = (unsigned int) n;
+	
+	// base case
+	if(index==0){
+		if(n==0){
+			String[index]= SP;
+			return;
+		}
+		String[index] = n%10 + 0x30;
 		return;
 	}
-	add2String(n/10, index++);
+	
+	add2myString(n/10, index-1);
+	
+	if (index == 3 && n==0){	// Case when number is actually 0
+		String[index] = '0';
+		return;
+	}
+	
 	// N = 0 means there's not a digit in this place, fill with a space
 	if (n==0){	
 		String[index]= SP;		
 		return;
 	}
-	String[index] = n%10 + 0x30;		// Number to ASCII number 
+	//String[index] = index + 0x30;		// Number to ASCII number 
+	 String[index] = n%10 + 0x30;		// Number to ASCII number 
 	return;
 }
 
@@ -196,8 +217,28 @@ void UART_OutUDec(unsigned long n){
 // 2210 to "2.210 cm"
 //10000 to "*.*** cm"  any value larger than 9999 converted to "*.*** cm"
 void UART_ConvertDistance(unsigned long n){
-// as part of Lab 11 implement this function
-  
+	int8_t i;
+	String[8] = NULL;
+	String[7]= 'm';
+	String[6]= 'c';
+	String[5]= ' ';
+	String[1]= '.';
+	
+	// Overflow condition
+	if (n>9999){
+		String[0]= '*';
+		String[2]= '*';
+		String[3]= '*';
+		String[4]= '*';
+		return;
+  }
+	
+	for(i=4; i>=0; i--){
+		if(i==1) continue;	// Skip the decimal point
+		String[i]= n%10 + 0x30;
+		n= n/10;
+	}
+	
 }
 
 //-----------------------UART_OutDistance-----------------------

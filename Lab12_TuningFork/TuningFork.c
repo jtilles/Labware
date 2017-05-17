@@ -36,6 +36,18 @@
 #include "TExaS.h"
 #include "..//tm4c123gh6pm.h"
 
+#define OUTPUT 	0x04
+#define INPUT 	0x08
+#define FREQ		90908
+
+
+
+unsigned char buttonState;
+unsigned char lastButtonState;
+
+unsigned char toggleEnable;
+static unsigned char false = 0;
+static unsigned char true = 1;
 
 // basic functions defined at end of startup.s
 void DisableInterrupts(void); // Disable interrupts
@@ -44,12 +56,36 @@ void WaitForInterrupt(void);  // low power mode
 
 // input from PA3, output from PA2, SysTick interrupts
 void Sound_Init(void){ 
-
+	unsigned long volatile delay;
+	SYSCTL_RCGC2_R |= 0x00000001; // activate port A
+  delay = SYSCTL_RCGC2_R;
+	GPIO_PORTA_PCTL_R  = 0;
+  GPIO_PORTA_AMSEL_R &= ~0x20;      					// no analog
+  GPIO_PORTA_PCTL_R &= ~0x00F00000; 					// regular function
+  GPIO_PORTA_DIR_R |= OUTPUT;     						// make PA2 out
+	GPIO_PORTA_DIR_R &= ~INPUT;     						// make PA3 in
+	//GPIO_PORTA_PDR_R |= INPUT;									// Make input active low
+	GPIO_PORTA_DR8R_R |= OUTPUT;    						// can drive up to 8mA out
+  GPIO_PORTA_AFSEL_R = 0 ;  	// disable alt funct on PA2
+  GPIO_PORTA_DEN_R |= OUTPUT | INPUT;					// enable digital I/O on PA2
+	NVIC_ST_CTRL_R = 0;           							// disable SysTick during setup
+	NVIC_ST_RELOAD_R = FREQ;     								// reload value for 880H (assuming 80MHz BC)
+	NVIC_ST_CURRENT_R = 0;
+	NVIC_SYS_PRI3_R = NVIC_SYS_PRI3_R&0x00FFFFFF; // priority 0               
+  NVIC_ST_CTRL_R = 0x00000007;
+	buttonState = GPIO_PORTA_DATA_R & INPUT;
+	toggleEnable = false;
 }
 
 // called at 880 Hz
 void SysTick_Handler(void){
-
+	buttonState = GPIO_PORTA_DATA_R & INPUT;						// Get button status
+	if(buttonState > lastButtonState){									// Button has been pressed
+		if (toggleEnable) toggleEnable = false;
+		else toggleEnable = true;
+	}	
+	if(toggleEnable)	GPIO_PORTA_DATA_R ^= OUTPUT;     	// toggle PA2
+	lastButtonState = buttonState;											// Update state
 }
 
 int main(void){// activate grader and set system clock to 80 MHz
@@ -57,7 +93,8 @@ int main(void){// activate grader and set system clock to 80 MHz
   Sound_Init();         
   EnableInterrupts();   // enable after all initialization are done
   while(1){
-    // main program is free to perform other tasks
+		
+		// main program is free to perform other tasks
     // do not use WaitForInterrupt() here, it may cause the TExaS to crash
   }
 }
