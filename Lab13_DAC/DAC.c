@@ -30,6 +30,7 @@ void DAC_Init(void){
 	GPIO_PORTB_LOCK_R		= 	0x01;						// Unlock Port B for writting
 	GPIO_PORTB_CR_R			|= 	0x0F;						// Allow changes to PB.0-PB.3
 	GPIO_PORTB_DIR_R 		|= 	0x0F;  					// Turn PB.0 - PB.3 to outputs
+	GPIO_PORTB_DR8R_R 	|=	0x0F;						// Turn PB.0 - PB.3 8mA drive
 	GPIO_PORTB_AMSEL_R 	&= 	0xF0;						// Ensure the analog functionality is turned off
 	GPIO_PORTB_DATA_R 	&= 	0xF0;						// Intialize Port B Pins as off
 	GPIO_PORTB_PCTL_R 	&= 	0xF0;						// Set the PB.0 - PB.3 to GPIO, not alternate function

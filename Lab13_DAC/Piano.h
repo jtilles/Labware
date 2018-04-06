@@ -5,6 +5,10 @@
 // Daniel Valvano, Jonathan Valvano
 // December 29, 2014
 
+#define KEY0 	0x01
+#define KEY1 	0x02
+#define KEY2	0x04
+#define KEY3	0x08	
 
 // Freqencies (in hertz) of the notes abstracted
 typedef enum{

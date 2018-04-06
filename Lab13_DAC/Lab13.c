@@ -12,6 +12,8 @@
 #include "Piano.h"
 #include "TExaS.h"
 
+#define SYSTICK_FREQ 80000000		// 80MHz frequency
+
 // basic functions defined at end of startup.s
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -24,10 +26,19 @@ int main(void){ // Real Lab13
   Sound_Init(); // initialize SysTick timer and DAC
   Piano_Init();
   EnableInterrupts();  // enable after all initialization are done
-	Sound_Tone(8000);		// Play 10KHz wave
+	NVIC_ST_RELOAD_R = 1;
+	//Sound_Tone(1000);
   while(1){                
 // input from keys to select tone
-
+		unsigned long newTone = Piano_In() ;
+		if(newTone != 1){				// if a key is pressed, play a tone
+			unsigned long counts = (unsigned long) SYSTICK_FREQ/ (unsigned long) newTone / 16;
+			Sound_Tone(counts-1);
+		}
+		else										// Else, turn off the music
+			Sound_Tone(0);
+		
+		delay(100);
   }
             
 }
