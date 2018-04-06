@@ -5,6 +5,15 @@
 // Daniel Valvano, Jonathan Valvano
 // December 29, 2014
 
+
+// Freqencies (in hertz) of the notes abstracted
+typedef enum{
+	C = 523,
+	D = 587,
+	E = 659,
+	G = 784
+} notes;
+
 // **************Piano_Init*********************
 // Initialize piano key inputs
 // Input: none

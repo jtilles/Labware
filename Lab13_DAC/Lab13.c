@@ -24,6 +24,7 @@ int main(void){ // Real Lab13
   Sound_Init(); // initialize SysTick timer and DAC
   Piano_Init();
   EnableInterrupts();  // enable after all initialization are done
+	Sound_Tone(8000);		// Play 10KHz wave
   while(1){                
 // input from keys to select tone
 
