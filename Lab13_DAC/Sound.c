@@ -12,8 +12,10 @@
 
 #define SYSTICK_FREQ 1000000
 
-unsigned char sineWave[16] = {8, 10, 13, 14, 15, 14, 13, 10, 8, 5, 2, 1, 0, 1, 2, 5};
-
+//unsigned char sineWave[16] = {8, 10, 13, 14, 15, 14, 13, 10, 8, 5, 2, 1, 0, 1, 2, 5};
+	unsigned char sineWave[64] = {8,8,9,10,10,11,12,12,13,13,14,14,14,15,15,15,15,15,15,
+																15,14,14,14,13,13,12,12,11,10,10,9,8,8,7,6,5,5,4,3,3,2,
+																2,1,1,1,0,0,0,0,0,0,0,1,1,1,2,2,3,3,4,5,5,6,7};
 // **************Sound_Init*********************
 // Initialize Systick periodic interrupts
 // Also calls DAC_Init() to initialize DAC
@@ -63,7 +65,7 @@ void Sound_Off(void){
 // Executed every 12.5ns*(period)
 void SysTick_Handler(void){
 		//DAC_Out(GPIO_PORTB_DATA_R ^ 0x08);
-		static char counter;
+		static int counter;
 		DAC_Out(sineWave[counter]);
-		counter= ((counter + 1) & 0x0F); 	// Resets counter after overflow (hypothetically)
+		counter= ((counter + 1) & 63); 	// Resets counter after overflow (hypothetically)
 }

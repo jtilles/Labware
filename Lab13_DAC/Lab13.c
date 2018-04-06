@@ -32,13 +32,12 @@ int main(void){ // Real Lab13
 // input from keys to select tone
 		unsigned long newTone = Piano_In() ;
 		if(newTone != 1){				// if a key is pressed, play a tone
-			unsigned long counts = (unsigned long) SYSTICK_FREQ/ (unsigned long) newTone / 16;
-			Sound_Tone(counts-1);
+			unsigned long counts = (unsigned long) SYSTICK_FREQ/ (unsigned long) newTone / 64;
+			Sound_Tone(counts-1);	// Counts for systick are: Systick_Freq/NoteFreq/NumCycles
 		}
 		else										// Else, turn off the music
 			Sound_Tone(0);
 		
-		delay(100);
   }
             
 }
