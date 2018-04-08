@@ -33,6 +33,10 @@
 #include "..//tm4c123gh6pm.h"
 #include "Nokia5110.h"
 #include "TExaS.h"
+#include <stdint.h>
+
+#define SYSTICK_COUNT 0x1E847F  // 2 mil counts @ 80MHz = 40 Hz int
+#define NULL 0x00
 
 void EnableInterrupts(void);  // Enable interrupts
 
@@ -40,6 +44,8 @@ unsigned char String[10]; // null-terminated ASCII string
 unsigned long Distance;   // units 0.001 cm
 unsigned long ADCdata;    // 12-bit 0 to 4095 sample
 unsigned long Flag;       // 1 means valid Distance, 0 means Distance is empty
+
+
 
 //********Convert****************
 // Convert a 12-bit binary ADC sample into a 32-bit unsigned
@@ -50,16 +56,24 @@ unsigned long Flag;       // 1 means valid Distance, 0 means Distance is empty
 // Input: sample  12-bit ADC sample
 // Output: 32-bit distance (resolution 0.001cm)
 unsigned long Convert(unsigned long sample){
-  return 0;  // replace this line with real code
+  return ((sample+1)*2000)/4096;  // replace this line with real code
 }
 
 // Initialize SysTick interrupts to trigger at 40 Hz, 25 ms
 void SysTick_Init(unsigned long period){
+	NVIC_ST_CTRL_R &= ~(NVIC_ST_CTRL_ENABLE);  	// Disable Systick during setup
+	NVIC_ST_RELOAD_R = period;									// Intialize reload value to largest 40 Hz
+	NVIC_ST_CURRENT_R = 0;											// Intialize current systick count to 0
+	NVIC_SYS_PRI3_R &= ~(NVIC_SYS_PRI3_TICK_M);	// Set systick interrupt on highest priority (0)
+	NVIC_ST_CTRL_R |= 
+							( NVIC_ST_CTRL_ENABLE |					// Enable systick
+								NVIC_ST_CTRL_INTEN	|					// Enable systick to generate interupts
+								NVIC_ST_CTRL_CLK_SRC);				// Use system clock for Systick source
 
 }
 // executes every 25 ms, collects a sample, converts and stores in mailbox
 void SysTick_Handler(void){ 
-
+	ADCdata = ADC0_In();
 }
 
 //-----------------------UART_ConvertDistance-----------------------
@@ -75,7 +89,27 @@ void SysTick_Handler(void){
 //10000 to "*.*** cm"  any value larger than 9999 converted to "*.*** cm"
 void UART_ConvertDistance(unsigned long n){
 // as part of Lab 11 you implemented this function
-
+	int8_t i;
+	String[8] = NULL;
+	String[7]= 'm';
+	String[6]= 'c';
+	String[5]= ' ';
+	String[1]= '.';
+	
+	// Overflow condition
+	if (n>9999){
+		String[0]= '*';
+		String[2]= '*';
+		String[3]= '*';
+		String[4]= '*';
+		return;
+  }
+	
+	for(i=4; i>=0; i--){
+		if(i==1) continue;	// Skip the decimal point
+		String[i]= n%10 + 0x30;
+		n= n/10;
+	}
 }
 
 // main1 is a simple main program allowing you to debug the ADC interface
@@ -105,16 +139,26 @@ int main2(void){
 // you should use this main to build the final solution with interrupts and mailbox
 int main(void){ 
   volatile unsigned long delay;
+	unsigned char welcomeMessage[] = {'P','o','t',' ','D','i','s','t', 0};
   TExaS_Init(ADC0_AIN1_PIN_PE2, SSI0_Real_Nokia5110_Scope);
-// initialize ADC0, channel 1, sequencer 3
-// initialize Nokia5110 LCD (optional)
-// initialize SysTick for 40 Hz interrupts
-// initialize profiling on PF1 (optional)
-                                    //    wait for clock to stabilize
+	ADC0_Init();    // initialize ADC0, channel 1, sequencer 3
+	delay = NVIC_ST_CURRENT_R;  
+  Nokia5110_Init();             // initialize Nokia5110 LCD
+	SysTick_Init(SYSTICK_COUNT);		// initialize SysTick for 40 Hz interrupts
+																	// initialize profiling on PF1 (optional)
+  delay = NVIC_ST_CURRENT_R;            //    wait for clock to stabilize
 
   EnableInterrupts();
+	Nokia5110_Clear();
+	Nokia5110_SetCursor(0,0);
+	
+	Nokia5110_OutString(welcomeMessage);
 // print a welcome message  (optional)
   while(1){ 
+		Nokia5110_SetCursor(0,1);
+		Distance = Convert(ADCdata);
+		UART_ConvertDistance(Distance);
+		Nokia5110_OutString(String);
 // read mailbox
 // output to Nokia5110 LCD (optional)
   }
