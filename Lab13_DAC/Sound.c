@@ -45,7 +45,6 @@ void Sound_Init(void){
 void Sound_Tone(unsigned long period){
 // this routine sets the RELOAD and starts SysTick
 	NVIC_ST_RELOAD_R = period;
-//	NVIC_ST_CTRL_R |= NVIC_ST_CTRL_ENABLE; 			// Enable systick
 
 }
 
@@ -55,7 +54,6 @@ void Sound_Tone(unsigned long period){
 // Output: none
 void Sound_Off(void){
  // this routine stops the sound output
-//	NVIC_ST_CTRL_R &= ~(NVIC_ST_CTRL_ENABLE);		// Turn off systick
 	DAC_Out(0);
 	NVIC_ST_RELOAD_R = 0;
 }
